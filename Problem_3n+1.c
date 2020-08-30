@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<string.h>
 
+int backup[1000000] = {0};
+
 int main(int argc, char** argv){
 
     int a;
@@ -32,23 +34,28 @@ int main(int argc, char** argv){
             i=n=a;
             while(i<=b){
                 count ++;
-                if(n==1){ 
-                    if(count > max)
+
+		if(backup[i] != 0 || n==1){
+		   if(backup[i] > count){
+	              if(backup[i] > max)
+      		          max = backup[i];
+		   }else{
+                      if(count > max)
                         max = count;
+		   }
+		   if(backup[i] == 0)
+                      backup[i] = count;
                    count = 0;
                    i++;
                    n=i;
                    continue;
                 }
-
-                
                 if(n&1)
                     n = (3*n)+1;
                 else
-                    n >>= 1;      
-                
-                
+                    n >>= 1; 
             };
+	   
 	    sprintf(sentence,"%d %d %d\n",a,b,max);
 	    strcat(buff_out,sentence);
         }
