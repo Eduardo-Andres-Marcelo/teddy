@@ -1,31 +1,35 @@
 #include<stdio.h>
-#include<stdint.h>
-#include<inttypes.h>
-uint64_t lookupTable[1000] = {0};
-char digitInteger[1000];
-uint64_t fibonacci_memo(int n){
-	if( n <= 2 ){
-		return 1;
-	}else{
-		if( lookupTable[n] != 0){
-			return lookupTable[n];
-		}else{
-			uint64_t x = fibonacci_memo(n-1) + fibonacci_memo(n-2);
-			lookupTable[n] = x;
-			return x;
-		}
+#include<stdlib.h>
+
+int lookupFib[1000] = { 0 };
+int maxFib = 0;
+int fibonacci_mem(int f){
+   
+   int index;
+   if(maxFib < f){
+	int temp = 0;
+	for(index=2; index<=f; ++index){
+		lookupFib[index] = lookupFib[index-2] + lookupFib[index-1];
 	}
+	maxFib = f;
+   }
+   return lookupFib[f];
 }
+
 int main(){
-	FILE *fileInput = fopen("data.in","r");
-	FILE *fileOutput = fopen("data.out","w");
-	int value;
-	while(fscanf(fileInput,"%d\n",&value) != EOF){
-		if(value >= 1 && value <= 1000){
-			fprintf(fileOutput,"%" PRIu64 "\n",fibonacci_memo(value));
-		}
-	};
-	fclose(fileInput);
-	fclose(fileOutput);
-	return 0;
+   FILE *fileData = fopen("data.in","r");
+   FILE *fileResult = fopen("data.out","w");
+   int value;
+
+   lookupFib[0] = 0;
+   lookupFib[1] = 1;
+
+   while(fscanf(fileData,"%d\n",&value) != EOF){
+	if(value >=1 && value <=1000){
+		fprintf(fileResult,"%d\n",fibonacci_mem(value));
+	}
+   }
+   fclose(fileData);
+   fclose(fileResult);
+   return 0;
 }
